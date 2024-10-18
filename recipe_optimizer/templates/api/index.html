@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Steps Saving</title>
+    {% load static %}
+    <link rel="stylesheet" href = "{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="page-container">
+        <!-- Step adding form on the left -->
+        <div class="form-container">
+            <h1>Add Recipe Steps</h1>
+            
+            <div class="form-group">
+                <label for="stepName">Step Name:</label>
+                <input type="text" id="stepName" placeholder="Enter step name" maxlength="120">
+            </div>
+    
+            <div class="form-group">
+                <label for="stepDuration">Step Duration (min):</label>
+                <input type="number" id="stepDuration" placeholder="Duration (minutes)" maxlength="4">
+            </div>
+    
+            <div class="form-group">
+                <label for="dependency">Requires Chef?</label>
+                <select id="dependency">
+                    <option value="Select">Select</option>
+                    <option value="true">True</option>
+                    <option value="false">False</option>
+                </select>
+            </div>
+    
+            <div class="form-group">
+                <label>Prerequisites (if any):</label>
+                <div id="prerequisiteCheckboxes"></div> <!-- Checkboxlar buraya eklenecek -->
+            </div>
+    
+            <button onclick="addStep()">Add Step</button>
+            <button onclick="submitAndShowResult()">See the Result</button>
+        </div>
+    
+        <!-- Table to display added steps on the right -->
+        <div class="table-container">
+            <h2>Added Steps</h2>
+            <table id="stepsTable">
+                <thead>
+                    <tr>
+                        <th>Step</th>
+                        <th>Duration (min)</th>
+                        <th>Requires Chef</th>
+                        <th>Prerequisites</th>
+                    </tr>
+                </thead>
+                <tbody id="stepsBody"></tbody>
+            </table>
+        </div>
+
+        <!-- API response data table moved below for better layout -->
+        <div class="table-container" style="margin-top: 50px;"> <!-- Tabloyu sayfanın aşağısına aldık -->
+            <h2>Steps from API (Sorted)</h2>
+            <table id="apiStepsTable">
+                <thead>
+                    <tr>
+                        <th>Step</th>
+                        <th>Duration (min)</th>
+                        <th>Requires Chef</th>
+                        <th>Prerequisites</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                    </tr>
+                </thead>
+                <tbody id="apiStepsBody"></tbody>
+            </table>
+        </div>
+    </div>
+    {% comment %} <script src="{% static 'js/script.js' %}"></script> {% endcomment %}
+    <script>
+        let steps = []; // Adımları saklayacağımız global array
+
+        // Checkboxları güncelleyen fonksiyon
+        function updatePrerequisites() {
+            const prerequisiteCheckboxes = document.getElementById('prerequisiteCheckboxes');
+            prerequisiteCheckboxes.innerHTML = ''; // Önceki checkboxları temizle
+
+            steps.forEach(step => {
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.value = step.id; // Step'in id'sini value olarak kullanıyoruz
+                checkbox.id = 'prereq-' + step.id;
+
+                const label = document.createElement('label');
+                label.htmlFor = 'prereq-' + step.id;
+                label.textContent = step.content;
+
+                const div = document.createElement('div');
+                div.appendChild(checkbox);
+                div.appendChild(label);
+
+                prerequisiteCheckboxes.appendChild(div); // Checkboxları sayfaya ekle
+            });
+        }
+
+        // Formdan adım ekleme fonksiyonu
+        function addStep() {
+            const stepName = document.getElementById('stepName').value;
+            const stepDuration = parseInt(document.getElementById('stepDuration').value);
+            const requiresChef = document.getElementById('dependency').value === 'true';
+            const prerequisites = []; // Seçili prerequisite adımlarını saklamak için
+
+            // Checkbox'lardan seçilen prerequisites'leri topluyoruz
+            const checkboxes = document.querySelectorAll('#prerequisiteCheckboxes input[type="checkbox"]:checked');
+            checkboxes.forEach(checkbox => prerequisites.push(checkbox.value));
+
+            // Adımı steps array'ine ekliyoruz
+            const newStep = {
+                id: stepName.replace(/\s+/g, '-').toLowerCase(), // Boşlukları "-" ile değiştirip küçük harf yapıyoruz
+                content: stepName,
+                time: stepDuration,
+                prerequisites: prerequisites,
+                occupies_chef: requiresChef,
+            };
+            steps.push(newStep);
+
+            // Tabloya adımı ekle
+            const tableBody = document.getElementById('stepsBody');
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${stepName}</td>
+                <td>${stepDuration}</td>
+                <td>${requiresChef}</td>
+                <td>${prerequisites.join(', ')}</td>
+            `;
+            tableBody.appendChild(row);
+
+            // Prerequisites checkboxlarını güncelle
+            updatePrerequisites();
+
+            // Formu sıfırla
+            document.getElementById('stepName').value = '';
+            document.getElementById('stepDuration').value = '';
+            document.getElementById('dependency').value = 'Select';
+            document.querySelectorAll('#prerequisiteCheckboxes input[type="checkbox"]').forEach(checkbox => checkbox.checked = false);
+        }
+
+        // API'ye verileri gönderip gelen cevabı ekrana yazdıran fonksiyon
+        function submitAndShowResult() {
+            const jsonData = JSON.stringify({ tasks: steps }, null, 2); // Verileri JSON formatına çeviriyoruz
+
+            fetch('/api/tasks/', { // API URL'sini buraya giriyoruz
+                method: 'POST', // POST isteği
+                headers: {
+                    'Content-Type': 'application/json', // JSON formatında veri gönderiyoruz
+                    'X-CSRFToken': '{{ csrf_token }}', // CSRF token eklemeyi unutmayın
+                },
+                body: jsonData, // JSON formatındaki veriyi gönderiyoruz
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('API isteği başarısız oldu: ' + response.statusText);
+                }
+                return response.json(); // JSON cevabını parse et
+            })
+            .then(data => {
+                // API'den gelen verileri tabloya ekle
+                const apiStepsBody = document.getElementById('apiStepsBody');
+                apiStepsBody.innerHTML = ''; // Önceki içerikleri temizle
+
+                data.forEach(step => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${step.content}</td>
+                        <td>${step.time}</td>
+                        <td>${step.occupies_chef}</td>
+                        <td>${step.prerequisites.join(', ')}</td>
+                        <td>${step.start_time}</td>
+                        <td>${step.end_time}</td>
+                    `;
+                    apiStepsBody.appendChild(row);
+                });
+
+                alert('API yanıtı başarıyla alındı ve tabloya eklendi!');
+            })
+            .catch((error) => {
+                console.error('Hata:', error); // Hata varsa burada yakalanır
+                alert('API\'ye veri gönderme sırasında bir hata oluştu: ' + error.message);
+            });
+        }
+    </script>
+</body>
+</html>

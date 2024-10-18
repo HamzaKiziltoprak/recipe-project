@@ -1,0 +1,63 @@
+{
+    "steps": [
+      {
+ 
+        "content": "Mix the dry ingredients",
+        "time": 2,
+        "occupies_chef": true
+,        "prerequisites": []
+      },
+      {
+        "content": "Allow the butter and egg to reach room temperature",
+        "time": 10,
+        "occupies_chef": false,
+        "prerequisites": []
+      },
+      {
+        "content": "Mix the butter, sugar, egg, and vanilla in a bowl",
+        "time": 3,
+        "occupies_chef": true
+,        "prerequisites": ["allow-ingredients-to-reach-room-temperature"]
+      },
+      {
+        "content": "Combine the dry and wet ingredients",
+        "time": 5,
+        "occupies_chef": true
+,        "prerequisites": ["mix-the-dry-ingredients", "mix-the-wet-ingredients"]
+      },
+      {
+
+        "content": "Add the chocolate chips",
+        "time": 1,
+        "occupies_chef": true
+,        "prerequisites": ["combine-the-dry-and-wet-ingredients"]
+      },
+      {
+        "content": "Chill the dough",
+        "time": 60,
+        "occupies_chef": false,
+        "prerequisites": ["add-the-chocolate-chips"]
+      },
+      {
+        "content": "Roll the dough into balls",
+        "time": 10,
+        "occupies_chef": true
+,        "prerequisites": ["chill-the-dough"]
+      },
+      {
+        
+        "content": "Preheat the oven to 350 degrees",
+        "time": 10,
+        "occupies_chef": false,
+        "prerequisites": []
+      },
+      {
+        
+        "content": "Bake the cookies",
+        "time": 15,
+        "occupies_chef": false,
+        "prerequisites": ["chill-the-dough", "preheat-the-oven"]
+      }
+    ]
+  }
+  

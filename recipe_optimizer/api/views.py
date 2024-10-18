@@ -73,4 +73,5 @@ def process_tasks(request):
             return JsonResponse({"error": str(e)}, status=500)
 
     # GET isteği için sayfa döndürme
-    return render(request, 'api/index.html')
+    return render(request, 'api/index.html')     
+

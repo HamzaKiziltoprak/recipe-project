@@ -86,14 +86,10 @@ def process_tasks(request):
                                 "occupies_chef": False
                             }
                         ]
-
-
             current_time = 0
-
             
             def prerequisites_completed(task, tasks):
                 return all(next((x for x in tasks if x["id"] == prereq and x["completed"]), False) for prereq in task["prerequisites"])
-
             
             for task in tasks:
                 task["completed"] = False
@@ -103,9 +99,7 @@ def process_tasks(request):
             while any(not task["completed"] for task in tasks):
                 for task in tasks:
                     if task["completed"]:
-                        continue
-
-                    
+                        continue 
                     if prerequisites_completed(task, tasks):
                         if len(task["prerequisites"]) == 0:
                             task["start_time"] = 0
@@ -127,9 +121,22 @@ def process_tasks(request):
                             task["completed"] = True
                             current_time += task["time"]
 
+            unoc_unpre = [task for task in tasks if not task["occupies_chef"] and not task["prerequisites"]]
+            for task in unoc_unpre:
+                for t in tasks:
+                    if task["id"] in t["prerequisites"]:
+                                    task["start_time"] = t["start_time"] - task["time"] - 5 if t["start_time"] - task["time"] - 5 > 0 else t["start_time"] - task["time"]
+                                    task["end_time"] = t["start_time"]
+                                    break
+            for task in unoc_unpre:
+                for t in tasks:
+                    if t["id"] == task["id"]:
+                        t.update(task)
+                        break
             tasks.sort(key=lambda x: x["end_time"])
             for i in range(len(tasks)):
                 tasks[i]["order"] = i
+
             return JsonResponse(tasks, safe=False, json_dumps_params={'indent': 4})
 
         except json.JSONDecodeError:

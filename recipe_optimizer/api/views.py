@@ -128,6 +128,8 @@ def process_tasks(request):
                             current_time += task["time"]
 
             tasks.sort(key=lambda x: x["end_time"])
+            for i in range(len(tasks)):
+                tasks[i]["order"] = i
             return JsonResponse(tasks, safe=False, json_dumps_params={'indent': 4})
 
         except json.JSONDecodeError:

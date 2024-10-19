@@ -3,27 +3,90 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 import json
 
-@csrf_exempt  # CSRF korumasını devre dışı bırakmak için
+@csrf_exempt  # temporary for postman tests
 def process_tasks(request):
     if request.method == "POST":
         try:
-            # POST isteğinden gelen verileri al
+            
             data = json.loads(request.body)
             tasks = data.get("tasks", [])
 
-            # Eğer 'tasks' boşsa, varsayılan görev listesi kullan
             if not tasks:
                 tasks = [
-                    {"order": 0, "id": "mix-the-dry-ingredients", "content": "Mix the dry ingredients", "time": 2, "prerequisites": [], "occupies_chef": True},
-                    {"order": 1, "id": "allow-ingredients-to-reach-room-temperature", "content": "Allow the butter and egg to reach room temperature", "time": 10, "prerequisites": [], "occupies_chef": False},
-                    {"order": 4, "id": "add-the-chocolate-chips", "content": "Add the chocolate chips", "time": 1, "prerequisites": ["combine-the-dry-and-wet-ingredients"], "occupies_chef": True},
-                    {"order": 5, "id": "chill-the-dough", "content": "Chill the dough", "time": 60, "prerequisites": ["add-the-chocolate-chips"], "occupies_chef": False},
-                    {"order": 3, "id": "combine-the-dry-and-wet-ingredients", "content": "Combine the dry and wet ingredients", "time": 5, "prerequisites": ["mix-the-dry-ingredients", "mix-the-wet-ingredients"], "occupies_chef": True},
-                    {"order": 2, "id": "mix-the-wet-ingredients", "content": "Mix the butter, sugar, egg, and vanilla in a bowl", "time": 3, "prerequisites": ["allow-ingredients-to-reach-room-temperature"], "occupies_chef": True},
-                    {"order": 6, "id": "roll-the-dough-into-balls", "content": "Roll the dough into balls", "time": 10, "prerequisites": ["chill-the-dough"], "occupies_chef": True},
-                    {"order": 7, "id": "preheat-the-oven", "content": "Preheat the oven to 350 degrees", "time": 10, "prerequisites": ["chill-the-dough"], "occupies_chef": False},
-                    {"order": 8, "id": "form-the-cookies", "content": "Form the cookies", "time": 15, "prerequisites": ["chill-the-dough", "preheat-the-oven"], "occupies_chef": False},
-                ]
+                            {
+                                "order": 0,
+                                "id": "mix-the-dry-ingredients",
+                                "content": "Mix the dry ingredients",
+                                "time": 2,
+                                "prerequisites": [],
+                                "occupies_chef": True
+                            },
+                            {
+                                "order": 1,
+                                "id": "allow-ingredients-to-reach-room-temperature",
+                                "content": "Allow the butter and egg to reach room temperature",
+                                "time": 10,
+                                "prerequisites": [],
+                                "occupies_chef": False
+                            },
+                            {
+                                "order": 2,
+                                "id": "mix-the-wet-ingredients",
+                                "content": "Mix the butter, sugar, egg, and vanilla in a bowl",
+                                "time": 3,
+                                "prerequisites": ["allow-ingredients-to-reach-room-temperature"],
+                                "occupies_chef": True
+                            },
+                            {
+                                "order": 3,
+                                "id": "combine-the-dry-and-wet-ingredients",
+                                "content": "Combine the dry and wet ingredients",
+                                "time": 5,
+                                "prerequisites": ["mix-the-dry-ingredients", "mix-the-wet-ingredients"],
+                                "occupies_chef": True
+                            },
+                            {
+                                "order": 4,
+                                "id": "add-the-chocolate-chips",
+                                "content": "Add the chocolate chips",
+                                "time": 1,
+                                "prerequisites": ["combine-the-dry-and-wet-ingredients"],
+                                "occupies_chef": True
+                            },
+                            {
+                                "order": 5,
+                                "id": "chill-the-dough",
+                                "content": "Chill the dough",
+                                "time": 60,
+                                "prerequisites": ["add-the-chocolate-chips"],
+                                "occupies_chef": False
+                            },
+                            {
+                                "order": 6,
+                                "id": "roll-the-dough-into-balls",
+                                "content": "Roll the dough into balls",
+                                "time": 10,
+                                "prerequisites": ["chill-the-dough"],
+                                "occupies_chef": True
+                            },
+                            {
+                                "order": 7,
+                                "id": "preheat-the-oven",
+                                "content": "Preheat the oven to 350 degrees",
+                                "time": 10,
+                                "prerequisites": [],
+                                "occupies_chef": False
+                            },
+                            {
+                                "order": 8,
+                                "id": "form-the-cookies",
+                                "content": "Form the cookies",
+                                "time": 15,
+                                "prerequisites": ["chill-the-dough", "preheat-the-oven"],
+                                "occupies_chef": False
+                            }
+                        ]
+
 
             current_time = 0
 
@@ -72,6 +135,5 @@ def process_tasks(request):
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=500)
 
-    # GET isteği için sayfa döndürme
+    # retur GET request to page 
     return render(request, 'api/index.html')     
-

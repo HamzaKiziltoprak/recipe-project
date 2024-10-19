@@ -3,79 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recipe Steps Saving</title>
+    <title>Add and Edit Steps</title>
     {% load static %}
-    <link rel="stylesheet" href = "{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <link rel="icon" href="https://img.icons8.com/ios/452/chef.png" type="image/png">
+    <script src="{% static 'js/script.js' %}" defer></script> <!-- Include your JavaScript file -->
 </head>
 <body>
+
     <div class="page-container">
+        <!-- Header -->
+        <h1>Add/Edit Step</h1>
+
+        <!-- Form Structure -->
         <div class="form-container">
-            <h1>Add Recipe Steps</h1>
-            
-            <div class="form-group">
-                <label for="stepName">Step Name:</label>
-                <input type="text" id="stepName" placeholder="Enter step name" maxlength="120">
-            </div>
-    
-            <div class="form-group">
-                <label for="stepDuration">Step Duration (min):</label>
-                <input type="number" id="stepDuration" placeholder="Duration (minutes)" maxlength="4">
-            </div>
-    
-            <div class="form-group">
-                <label for="dependency">Requires Chef?</label>
-                <select id="dependency">
-                    <option value="Select">Select</option>
-                    <option value="true">True</option>
-                    <option value="false">False</option>
-                </select>
-            </div>
-    
-            <div class="form-group">
-                <label>Prerequisites (if any):</label>
-                <div id="prerequisiteCheckboxes"></div>
-            </div>
-    
-            <button onclick="addStep()">Add Step</button>
-            <button onclick="submitAndShowResult()">See the Result</button>      
-     
+            <form id="stepForm">
+                <!-- Step Name Input -->
+                <div class="form-group">
+                    <label for="stepName">Step Name:</label>
+                    <input type="text" id="stepName" name="stepName" placeholder="Enter step name" maxlength="120">
+                </div>
+
+                <!-- Duration Input -->
+                <div class="form-group">
+                    <label for="stepDuration">Duration (minutes):</label>
+                    <input type="number" id="stepDuration" name="stepDuration" placeholder="Duration (minutes)" maxlength="4">
+                </div>
+
+                <!-- Chef Requirement Selection -->
+                <div class="form-group">
+                    <label for="dependency">Requires Chef:</label>
+                    <select id="dependency" name="dependency">
+                        <option value="Select">Select</option>
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+                    </select>
+                </div>
+
+                <!-- Prerequisites -->
+                <div id="prerequisiteCheckboxes" class="form-group">
+                    <label>Prerequisites:</label>
+                    <!-- This will be filled dynamically -->
+                </div>
+
+                <!-- Buttons -->
+                <button type="button" id="submitButton" onclick="addOrUpdateStep()">Add/Edit Step</button>
+                <button type="button" onclick="submitAndShowResult()">View Result</button>
+            </form>
         </div>
-    
+
+        <!-- Table of Added Steps -->
         <div class="table-container">
             <h2>Added Steps</h2>
-            <table id="stepsTable">
+            <table id="stepsTable" border="1">
                 <thead>
                     <tr>
-                        <th>Step</th>
-                        <th>Duration (min)</th>
+                        <th>Step Name</th>
+                        <th>Duration (minutes)</th>
                         <th>Requires Chef</th>
                         <th>Prerequisites</th>
                         <th>Action</th>
                     </tr>
                 </thead>
-                <tbody id="stepsBody"></tbody>
+                <tbody id="stepsBody">
+                    <!-- This will be filled dynamically -->
+                </tbody>
             </table>
         </div>
 
+        <!-- Table of Steps from API -->
         <div class="table-container">
             <h2>Steps from API (Sorted)</h2>
-            <table id="apiStepsTable">
+            <table id="apiStepsTable" border="1">
                 <thead>
                     <tr>
-                        <th>Step</th>
-                        <th>Duration (min)</th>
+                        <th>Step Name</th>
+                        <th>Duration (minutes)</th>
                         <th>Requires Chef</th>
                         <th>Prerequisites</th>
                         <th>Start Time</th>
                         <th>End Time</th>
                     </tr>
                 </thead>
-                
-                <tbody id="apiStepsBody"></tbody>
+                <tbody id="apiStepsBody">
+                </tbody>
             </table>
         </div>
     </div>
-    <script src="{% static 'js/script.js' %}"></script>
+
 </body>
 </html>

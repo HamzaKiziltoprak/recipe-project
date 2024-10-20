@@ -6,91 +6,91 @@
     <title>Add and Edit Steps</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <link rel="icon" href="https://img.icons8.com/ios/452/chef.png" type="image/png">
-    <script src="{% static 'js/script.js' %}" defer></script> <!-- Include your JavaScript file -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=timer">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+    </style>
 </head>
 <body>
+    <div class="main-container">
+        <!-- Form Section -->
+        <div class="form-and-steps">
+            <!-- Form Container -->
+            <div class="form-container">
+                <h1 class="section-title">Add/Edit Step</h1>
+                <form id="stepForm" class="modern-form">
+                    <div class="form-group">
+                        <label for="stepName">Step Name</label>
+                        <input type="text" id="stepName" name="stepName" placeholder="Enter step name" maxlength="120">
+                    </div>
 
-    <div class="page-container">
-        
+                    <div class="form-group">
+                        <label for="stepDuration"><i class="fas fa-hourglass-half"></i> Step Duration (min)</label>
+                        <input type="number" id="stepDuration" placeholder="Duration (minutes)" maxlength="4">
+                    </div>
 
-        <!-- Form Structure -->
-        <div class="form-container">
-            <form id="stepForm">
-                <!-- Header -->
-            <h1>Add/Edit Step</h1>
-                <!-- Step Name Input -->
-                <div class="form-group">
-                    <label for="stepName">Step Name:</label>
-                    <input type="text" id="stepName" name="stepName" placeholder="Enter step name" maxlength="120">
-                </div>
+                    <div class="form-group">
+                        <label for="dependency"><i class="fas fa-utensils"></i> Requires Chef</label>
+                        <select id="dependency" name="dependency">
+                            <option value="Select">Select</option>
+                            <option value="false">❌</option>
+                            <option value="true">✔️</option>
+                        </select>
+                    </div>
 
-                <!-- Duration Input -->
-                <div class="form-group">
-                    <label for="stepDuration">Duration (minutes):</label>
-                    <input type="number" id="stepDuration" name="stepDuration" placeholder="Duration (minutes)" maxlength="4">
-                </div>
+                    <div id="prerequisiteCheckboxes" class="form-group">
+                        <label>Prerequisites</label>
+                        <!-- This will be filled dynamically -->
+                    </div>
 
-                <!-- Chef Requirement Selection -->
-                <div class="form-group">
-                    <label for="dependency">Requires Chef:</label>
-                    <select id="dependency" name="dependency">
-                        <option value="Select">Select</option>
-                        <option value="true">Yes</option>
-                        <option value="false">No</option>
-                    </select>
-                </div>
-
-                <!-- Prerequisites -->
-                <div id="prerequisiteCheckboxes" class="form-group">
-                    <label>Prerequisites:</label>
-                    <!-- This will be filled dynamically -->
-                </div>
-
-                <!-- Buttons -->
-                <button type="button" id="submitButton" onclick="addOrUpdateStep()">Add/Edit Step</button>
-                <button type="button" onclick="submitAndShowResult()">View Result</button>
-            </form>
+                    <div class="button-group">
+                        <button type="button" id="submitButton" class="btn-primary" onclick="addOrUpdateStep()"><i class="fas fa-plus"></i></button>
+                        <button type="button" class="btn-secondary" onclick="submitAndShowResult()">View Result</button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Added Steps Table -->
+            <div class="table-container">
+                <h2 class="section-title">Added Steps</h2>
+                <table id="stepsTable">
+                    <thead>
+                        <tr>
+                            <th>Step Name</th>
+                            <th><i class="fas fa-hourglass-half"></i> Duration</th>
+                            <th><i class="fas fa-utensils"></i> Requires Chef</th>
+                            <th>Prerequisites</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="stepsBody">
+                        <!-- Dynamic content -->
+                    </tbody>
+                </table>
+            </div>
         </div>
 
-        <!-- Table of Added Steps -->
-        <div class="table-container">
-            <h2>Added Steps</h2>
-            <table id="stepsTable" border="1">
+        <!-- API Steps Table (Under the other tables) -->
+        <div class="table-container api-steps-table">
+            <h2 class="section-title">Steps from API (Sorted)</h2>
+            <table id="apiStepsTable">
                 <thead>
                     <tr>
                         <th>Step Name</th>
-                        <th>Duration (minutes)</th>
-                        <th>Requires Chef</th>
-                        <th>Prerequisites</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id="stepsBody">
-                    <!-- This will be filled dynamically -->
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Table of Steps from API -->
-        <div class="table-container">
-            <h2>Steps from API (Sorted)</h2>
-            <table id="apiStepsTable" border="1">
-                <thead>
-                    <tr>
-                        <th>Step Name</th>
-                        <th>Duration (minutes)</th>
-                        <th>Requires Chef</th>
+                        <th><i class="fas fa-hourglass-half"></i> Duration</th>
+                        <th><i class="fas fa-utensils"></i> Requires Chef</th>
                         <th>Prerequisites</th>
                         <th>Start Time</th>
                         <th>End Time</th>
                     </tr>
                 </thead>
                 <tbody id="apiStepsBody">
+                    <!-- Dynamic content -->
                 </tbody>
             </table>
         </div>
     </div>
 
+    <script src="{% static 'js/script.js' %}" defer></script>
 </body>
 </html>

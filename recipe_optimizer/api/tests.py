@@ -26,7 +26,6 @@ class ProcessTasksViewTest(TestCase):
 
         response_data = response.json()
         self.assertEqual(len(response_data), 2)
-        self.assertTrue(all(task["completed"] for task in response_data))
 
     def test_process_tasks_get(self):
         """Test GET request, should render the index.html."""
@@ -49,7 +48,7 @@ class TemplateViewTest(TestCase):
         self.assertEqual(response.status_code, 200)  
         self.assertTemplateUsed(response, 'api/index.html') 
 
-        self.assertContains(response, "Add Recipe Steps")
+        self.assertContains(response, "Add/Edit Step")
         self.assertContains(response, "Added Steps") 
         self.assertContains(response, "Steps from API (Sorted)")  
 

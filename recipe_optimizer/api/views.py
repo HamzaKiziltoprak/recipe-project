@@ -101,12 +101,17 @@ def process_tasks(request):
                     if task["completed"]:
                         continue 
                     if prerequisites_completed(task, tasks):
-                        if len(task["prerequisites"]) == 0:
+                        if len(task["prerequisites"]) == 0 and (not task["occupies_chef"]):
                             task["start_time"] = 0
                             task["end_time"] = task["time"]
                             task["completed"] = True
                             if task["time"] > current_time:
                                 current_time = task["time"]
+                        elif len(task["prerequisites"]) == 0 and task["occupies_chef"]:
+                            task["start_time"] = current_time
+                            task["end_time"] = task["time"] + current_time
+                            task["completed"] = True 
+                            current_time += task["time"]
                         elif not task["occupies_chef"]:  # Non-occupying task
                             task["start_time"] = current_time
                             task["end_time"] = current_time + task["time"]
@@ -125,9 +130,10 @@ def process_tasks(request):
             for task in unoc_unpre:
                 for t in tasks:
                     if task["id"] in t["prerequisites"]:
-                                    task["start_time"] = t["start_time"] - task["time"] - 5 if t["start_time"] - task["time"] - 5 > 0 else t["start_time"] - task["time"]
-                                    task["end_time"] = t["start_time"]
-                                    break
+                                    if t["start_time"] - task["time"] > 0 :
+                                        task["start_time"] = t["start_time"] - task["time"] - 5 if t["start_time"] - task["time"] - 5 > 0 else t["start_time"] - task["time"]
+                                        task["end_time"] = t["start_time"]
+                                        break
             for task in unoc_unpre:
                 for t in tasks:
                     if t["id"] == task["id"]:
@@ -145,4 +151,4 @@ def process_tasks(request):
             return JsonResponse({"error": str(e)}, status=500)
 
     # retur GET request to page 
-    return render(request, 'api/index.html')     
+    return render(request, 'api/index.html')

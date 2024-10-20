@@ -15,6 +15,7 @@ body {
     padding: 20px;
     overflow-x: hidden; /* Prevent horizontal overflow */
 }
+
 .project-title {
     font-size: 2.5rem;
     color: #4caf50;
@@ -24,23 +25,21 @@ body {
     border: 2px solid #4caf50;
     border-radius: 10px;
     background-color: rgba(255, 255, 255, 0.8);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 #resultMessage {
-    font-size: clamp(1.2rem, 2vw, 1.5rem); /* Responsive font size */
-    color: #ec5353; /* Mesaj rengini yeşil yap */
-    font-weight: bold; /* Kalın yazı */
-    text-align: center; /* Ortala */
-    margin: 10px 0px 0px 0px; /* Üst ve alt boşluk */
-    padding: 15px; /* İç boşluk */
-    background-color: #e8f5e9; /* Açık yeşil arka plan */
-    border: 1px solid #ec5353; /* Yeşil çerçeve */
-    border-radius: 10px; /* Yuvarlatılmış köşeler */
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Hafif gölge */
+    font-size: clamp(1.2rem, 2vw, 1.5rem);
+    color: #ec5353;
+    font-weight: bold;
+    text-align: center;
+    margin: 10px 0;
+    padding: 15px;
+    background-color: #e8f5e9;
+    border: 1px solid #ec5353;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
-
-
 
 .main-container {
     width: 100%;
@@ -63,6 +62,8 @@ body {
     padding-bottom: 10px;
     font-weight: bold;
 }
+
+
 
 /* Form and Steps - Flex Layout */
 .form-and-steps {
@@ -101,24 +102,32 @@ input, select {
     width: 100%;
 }
 
+/* Butonlar için arka planı kaldır */
 button {
     padding: 12px 0;
     border-radius: 8px;
     font-size: var(--font-base);
     cursor: pointer;
-    width: 100%;
+    width: 100%; /* Buton genişliği */
+    background: none; /* Arka planı kaldır */
+    border: none; /* Kenarlıkları kaldır */
+    transition: background-color 0.3s; /* Hover efekti */
+}
+
+.button-group {
+    display: flex;
+    justify-content: space-between; /* Boşluk bırak */
+    gap: 10px; /* Butonlar arasında boşluk */
 }
 
 .btn-primary {
     background-color: #4caf50;
     color: white;
-    border: none;
 }
 
 .btn-secondary {
     background-color: #f1f1f1;
     color: #333;
-    border: none;
 }
 
 button:hover {

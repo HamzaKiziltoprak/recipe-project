@@ -23,7 +23,7 @@ function setupInputListeners() {
     });
 }
 function formatPrerequisites(prerequisites) {
-    if (prerequisites.length === 0) return "None"; // Return "None" if no prerequisites
+    if (prerequisites.length === 0) return " "; //
     return prerequisites.map(prerequisite => `• ${prerequisite}`).join('<br>'); // Use bullet points and break line
 }
 // Function to format requiresChef value
@@ -34,7 +34,9 @@ function formatRequiresChef(requiresChef) {
 // Update the prerequisite checkboxes dynamically
 function updatePrerequisiteCheckboxes() {
     const prerequisiteCheckboxes = document.getElementById('prerequisiteCheckboxes');
-    prerequisiteCheckboxes.innerHTML = ''; // Clear previous checkboxes
+    prerequisiteCheckboxes.innerHTML = '<label>Prerequisites</label>'; // Başlığı her zaman ekle
+    // Clear previous checkboxes
+    prerequisiteCheckboxes.innerHTML += ''; // Önceki checkboxları temizle
 
     steps.forEach(step => {
         const checkbox = document.createElement('input');
@@ -53,6 +55,7 @@ function updatePrerequisiteCheckboxes() {
         prerequisiteCheckboxes.appendChild(div); // Add checkbox to the page
     });
 }
+
 
 // Function to remove the specified step
 function removeStep(index) {
@@ -122,7 +125,7 @@ function submitAndShowResult() {
 
         // Mesajı oluştur ve göster
         const messageDiv = document.getElementById("resultMessage");
-        messageDiv.innerHTML = `Your optimal cooking time is ${lastEndTime} min`;
+        messageDiv.innerHTML = `Your optimal cooking time is <strong>${lastEndTime} min`;
     })
     .catch((error) => {
         console.error('Error:', error); 

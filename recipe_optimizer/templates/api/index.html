@@ -5,18 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add and Edit Steps</title>
     {% load static %}
+<<<<<<< Updated upstream
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <link rel="icon" href="https://img.icons8.com/ios/452/chef.png" type="image/png">
     <script src="{% static 'js/script.js' %}" defer></script> <!-- Include your JavaScript file -->
 </head>
 <body>
 
+=======
+    <link rel="stylesheet" href = "{% static 'css/styles.css' %}">
+    <link rel="icon" href="https://img.icons8.com/?size=100&id=oBNCyLgI5QDA&format=png&color=000000" type="image/png">
+</head>
+<body background="https://media.istockphoto.com/id/625380766/tr/foto%C4%9Fraf/fresh-raw-pizza-dogh.jpg?s=612x612&w=0&k=20&c=JKEi_B_PlPhR0bc2_l1NM8eFPPxRIL_zAmV96-SzCvI=">
+>>>>>>> Stashed changes
     <div class="page-container">
         <!-- Header -->
         <h1>Add/Edit Step</h1>
 
         <!-- Form Structure -->
         <div class="form-container">
+<<<<<<< Updated upstream
             <form id="stepForm">
                 <!-- Step Name Input -->
                 <div class="form-group">
@@ -50,6 +58,40 @@
                 <button type="button" id="submitButton" onclick="addOrUpdateStep()">Add/Edit Step</button>
                 <button type="button" onclick="submitAndShowResult()">View Result</button>
             </form>
+=======
+            <h1>Add Recipe Steps</h1>
+            
+            <div class="form-group">
+                <label for="stepName">Step Name:</label>
+                <input type="text" id="stepName" placeholder="Enter step name" maxlength="120">
+            </div>
+    
+            <div class="form-group">
+                <label for="stepDuration"> 
+                    <img src="https://img.icons8.com/?size=100&id=AFsEebHPG1ft&format=png&color=000000" alt="Duration Icon" style="width: 50px; height: 50px; vertical-align: middle;">
+                    Step Duration (min):
+                </label>
+                <input type="number" id="stepDuration" placeholder="Duration (minutes)" maxlength="4">
+            </div>
+    
+            <div class="form-group">
+                <label for="dependency">Requires Chef?</label>
+                <select id="dependency">
+                    <option value="Select">Select</option>
+                    <option value="true">True</option>
+                    <option value="false">False</option>
+                </select>
+            </div>
+    
+            <div class="form-group">
+                <label>Prerequisites (if any):</label>
+                <div id="prerequisiteCheckboxes"></div>
+            </div>
+    
+            <button onclick="addStep()">Add Step</button>
+            <button onclick="submitAndShowResult()">See the Result</button>      
+     
+>>>>>>> Stashed changes
         </div>
 
         <!-- Table of Added Steps -->

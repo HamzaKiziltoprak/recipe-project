@@ -22,7 +22,10 @@ function setupInputListeners() {
         }
     });
 }
-
+function formatPrerequisites(prerequisites) {
+    if (prerequisites.length === 0) return "None"; // Return "None" if no prerequisites
+    return prerequisites.map(prerequisite => `• ${prerequisite}`).join('<br>'); // Use bullet points and break line
+}
 // Function to format requiresChef value
 function formatRequiresChef(requiresChef) {
     return requiresChef ? '✔️' : '❌'; // Checkmark for true, cross for false
@@ -103,7 +106,7 @@ function submitAndShowResult() {
                 <td>${step.content}</td>
                 <td>${step.time}</td>
                 <td>${formatRequiresChef(step.occupies_chef)}</td>
-                <td>${step.prerequisites.join(', ')}</td>
+                <td>${formatPrerequisites(step.prerequisites)}</td>
                 <td>${step.start_time}</td>
                 <td>${step.end_time}</td>
             `;
@@ -132,7 +135,7 @@ function updateStepTable() {
             <td>${step.content}</td>
             <td>${step.time}</td>
             <td>${formatRequiresChef(step.occupies_chef)}</td>
-            <td>${step.prerequisites.join(', ')}</td>
+            <td>${formatPrerequisites(step.prerequisites)}</td>
             <td>
                 <button onclick="editStep(${index})"><i class="fas fa-edit" style="cursor: pointer;"></i></button>
                 <button onclick="removeStep(${index})"><i class="fas fa-trash" style="cursor: pointer;"></i></button>

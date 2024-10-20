@@ -134,7 +134,8 @@ _tasks = tasks = [
     }
 ]
 
-@csrf_exempt  # temporary for postman tests
+# temporary for postman tests
+@csrf_exempt
 def process_tasks(request):
     if request.method == "POST":
         try:
@@ -144,7 +145,7 @@ def process_tasks(request):
             if not tasks: 
                 tasks = _tasks
             current_time = 0
-            
+
             tasks = schedule_tasks(tasks)
             tasks.sort(key=lambda x: x["end_time"])
             for i in range(len(tasks)):

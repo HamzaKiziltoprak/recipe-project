@@ -1,4 +1,5 @@
 let steps = []; // Global array to hold step data
+let editIndex = null; // Index of the step being edited
 
 // Set up input listeners for step name and duration
 function setupInputListeners() {
@@ -8,18 +9,23 @@ function setupInputListeners() {
     // Listener for step name
     stepNameInput.addEventListener('input', function() {
         if (stepNameInput.value.length > 120) {
-            alert("Step name cannot exceed 120 characters!"); // Alert if the name exceeds 120 characters
-            stepNameInput.value = stepNameInput.value.substring(0, 120); // Trim to 120 characters
+            alert("Step name cannot exceed 120 characters!");
+            stepNameInput.value = stepNameInput.value.substring(0, 120);
         }
     });
 
     // Listener for step duration
     stepDurationInput.addEventListener('input', function() {
         if (stepDurationInput.value.length > 4) {
-            alert("Step duration cannot exceed 4 characters!"); // Alert if duration exceeds 4 characters
-            stepDurationInput.value = stepDurationInput.value.substring(0, 4); // Trim to 4 characters
+            alert("Step duration cannot exceed 4 characters!");
+            stepDurationInput.value = stepDurationInput.value.substring(0, 4);
         }
     });
+}
+
+// Function to format requiresChef value
+function formatRequiresChef(requiresChef) {
+    return requiresChef ? '✔️' : '❌'; // Checkmark for true, cross for false
 }
 
 // Update the prerequisite checkboxes dynamically
@@ -28,16 +34,16 @@ function updatePrerequisiteCheckboxes() {
     prerequisiteCheckboxes.innerHTML = ''; // Clear previous checkboxes
 
     steps.forEach(step => {
-        const checkbox = document.createElement('input'); // Create a new checkbox
+        const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
         checkbox.value = step.id; // Use step id as value 
         checkbox.id = 'prereq-' + step.id;
 
-        const label = document.createElement('label'); // Create label for the checkbox
+        const label = document.createElement('label');
         label.htmlFor = 'prereq-' + step.id;
         label.textContent = step.content;
 
-        const div = document.createElement('div'); // Wrap checkbox and label in a div
+        const div = document.createElement('div');
         div.appendChild(checkbox);
         div.appendChild(label);
 
@@ -45,27 +51,9 @@ function updatePrerequisiteCheckboxes() {
     });
 }
 
-// Function to update the step table with current step data
-function updateStepTable() {
-    const tableBody = document.getElementById('stepsBody');
-    tableBody.innerHTML = ''; // Clear existing rows
-
-    steps.forEach((step, index) => {
-        const row = document.createElement('tr'); // Create a new row
-        row.innerHTML = `
-            <td>${step.content}</td>
-            <td>${step.time}</td>
-            <td>${step.occupies_chef}</td>
-            <td>${step.prerequisites.join(', ')}</td>
-            <td><button onclick="removeStep(${index})">Delete</button></td> <!-- Add delete button -->
-        `;
-        tableBody.appendChild(row); // Append the new row to the table
-    });
-}
-
 // Function to remove the specified step
 function removeStep(index) {
-    const removedStep = steps[index]; // Get the step to be removed
+    const removedStep = steps[index];
 
     // Check if this step is a prerequisite for other steps
     const isPrerequisiteForOtherSteps = steps.some(step => 
@@ -73,23 +61,23 @@ function removeStep(index) {
     );
 
     if (isPrerequisiteForOtherSteps) {
-        // Show alert if this step is a prerequisite for other steps
         alert(`This step is being used as a prerequisite for another step and cannot be deleted. You must delete those steps first.`);
         return; // Stop the deletion
     }
 
-    // Confirm deletion
     if (confirm("Are you sure you want to delete this step?")) {
         steps.splice(index, 1); // Remove the step from the steps array
         updateStepTable(); // Update the table
         updatePrerequisiteCheckboxes(); // Update the prerequisite checkboxes
-        alert("Step successfully deleted!"); // Show success message
+        alert("Step successfully deleted!");
     }
 }
 
 // Function to submit data and show results
 function submitAndShowResult() {
     const jsonData = JSON.stringify({ tasks: steps }, null, 2); // Convert steps array to JSON
+    const apiStepsBody = document.getElementById('apiStepsBody');
+    apiStepsBody.innerHTML = ''; // Clear previous content
 
     fetch('', { 
         method: 'POST', 
@@ -101,7 +89,7 @@ function submitAndShowResult() {
     })
     .then(response => {
         if (!response.ok) {
-            throw new Error('API request failed: ' + response.statusText); // Handle API errors
+            throw new Error('API request failed: ' + response.statusText);
         }
         return response.json(); // Parse JSON response
     })
@@ -114,7 +102,7 @@ function submitAndShowResult() {
             row.innerHTML = `
                 <td>${step.content}</td>
                 <td>${step.time}</td>
-                <td>${step.occupies_chef}</td>
+                <td>${formatRequiresChef(step.occupies_chef)}</td>
                 <td>${step.prerequisites.join(', ')}</td>
                 <td>${step.start_time}</td>
                 <td>${step.end_time}</td>
@@ -122,18 +110,16 @@ function submitAndShowResult() {
             apiStepsBody.appendChild(row); // Append the new row to the API steps table
         });
 
-        alert('API response successfully received and added to the table!'); // Show success message
+        alert('API response successfully received and added to the table!');
     })
     .catch((error) => {
         console.error('Error:', error); 
-        alert('An error occurred while sending data to the API: ' + error.message); // Handle errors during API submission
+        alert('An error occurred while sending data to the API: ' + error.message);
     });
 }
 
 // Initialize input listeners on document load
 document.addEventListener('DOMContentLoaded', setupInputListeners);
-
-let editIndex = null; // Index of the step being edited
 
 // Function to update the step table
 function updateStepTable() {
@@ -145,18 +131,18 @@ function updateStepTable() {
         row.innerHTML = `
             <td>${step.content}</td>
             <td>${step.time}</td>
-            <td>${step.occupies_chef}</td>
+            <td>${formatRequiresChef(step.occupies_chef)}</td>
             <td>${step.prerequisites.join(', ')}</td>
             <td>
-                <button onclick="editStep(${index})">Edit</button>
-                <button onclick="removeStep(${index})">Delete</button>
-            </td> <!-- Add edit and delete buttons -->
+                <button onclick="editStep(${index})"><i class="fas fa-edit" style="cursor: pointer;"></i></button>
+                <button onclick="removeStep(${index})"><i class="fas fa-trash" style="cursor: pointer;"></i></button>
+            </td>
         `;
         tableBody.appendChild(row); // Append the new row to the table
     });
 }
 
- // Function to edit a step
+// Function to edit a step
 function editStep(index) {
     const step = steps[index]; // Get the step to edit
     editIndex = index; // Set the index for editing
@@ -181,7 +167,7 @@ function addOrUpdateStep() {
     const stepDurationInput = document.getElementById('stepDuration');
     const dependency = document.getElementById('dependency').value;
 
-    const content = stepNameInput.value; // Get step name
+    const content = stepNameInput.value.trim(); // Get step name
     const time = stepDurationInput.value; // Get step duration
 
     // Gather prerequisites
@@ -193,47 +179,56 @@ function addOrUpdateStep() {
 
     // Form validation
     if (content === "" || time === "") {
-        alert("Please enter step name and duration."); // Alert if fields are empty
+        alert("Please enter step name and duration.");
         return;
+    }
+
+    const stepExists = steps.some((step, index) => 
+        step.content.toLowerCase() === content.toLowerCase() && index !== editIndex
+    );
+
+    if (stepExists) {
+        alert("A step with this name already exists!");
+        return; // Stop the addition
     }
 
     // Step name cannot consist solely of numbers
     if (!isNaN(content)) {
-        alert("Step name cannot consist solely of numbers!"); // Alert if step name is only numbers
+        alert("Step name cannot consist solely of numbers!");
         return;
     }
 
     // Ensure a valid duration is entered
     if (isNaN(time) || time <= 0) {
-        alert("Please enter a valid duration."); // Alert if duration is invalid
+        alert("Please enter a valid duration.");
         return;
     }
 
     // Ensure correct values are selected for chef requirement
     if (dependency !== "true" && dependency !== "false") {
-        alert("Please select 'True' or 'False'."); // Alert for invalid dependency
+        alert("Please select 'True' or 'False' for chef requirement.");
         return;
     }
 
     // Create new step object (id slugified)
     const newStep = {
-        id: content.replace(/\s+/g, '-').toLowerCase(), // Replace spaces with '-'
+        id: content.replace(/\s+/g, '-').toLowerCase(),
         content: content,
-        time: parseInt(time), // Convert duration to integer
-        occupies_chef: dependency === "true", // Convert chef requirement to boolean
+        time: parseInt(time),
+        occupies_chef: dependency === "true",
         prerequisites: selectedPrerequisites
     };
 
     // Check if the new step is trying to reference itself as a prerequisite
     if (newStep.prerequisites.includes(newStep.id)) {
-        alert("A step cannot add itself as a prerequisite!"); // Alert if trying to add itself as a prerequisite
-        return; // Stop the addition
+        alert("A step cannot add itself as a prerequisite!");
+        return;
     }
 
     if (editIndex !== null) {
         // If in edit mode, update the existing step
         steps[editIndex] = newStep;
-        editIndex = null; // Exit edit mode
+        editIndex = null;
         document.getElementById('submitButton').textContent = "Add"; // Change button text back to 'Add'
     } else {
         // Add the new step to the steps array
@@ -243,9 +238,11 @@ function addOrUpdateStep() {
     updateStepTable(); // Update the table
     updatePrerequisiteCheckboxes(); // Update the prerequisite checkboxes
 
-    // Clear the form
+    // Clear input fields
     stepNameInput.value = '';
     stepDurationInput.value = '';
     document.getElementById('dependency').value = 'Select';
-    checkboxes.forEach(checkbox => checkbox.checked = false); // Uncheck all checkboxes
 }
+
+// Initialize input listeners on document load
+document.addEventListener('DOMContentLoaded', setupInputListeners);

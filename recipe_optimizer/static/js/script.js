@@ -99,6 +99,8 @@ function submitAndShowResult() {
     .then(data => {
         const apiStepsBody = document.getElementById('apiStepsBody');
         apiStepsBody.innerHTML = ''; // Clear previous content
+        
+        let lastEndTime = null; // Variable to hold the last end time
 
         data.forEach(step => {
             const row = document.createElement('tr'); // Create a new row for each step
@@ -111,15 +113,23 @@ function submitAndShowResult() {
                 <td>${step.end_time}</td>
             `;
             apiStepsBody.appendChild(row); // Append the new row to the API steps table
+
+            // Update lastEndTime with the current step's end_time
+            lastEndTime = step.end_time; 
         });
 
         alert('API response successfully received and added to the table!');
+
+        // Mesajı oluştur ve göster
+        const messageDiv = document.getElementById("resultMessage");
+        messageDiv.innerHTML = `Your optimal cooking time is ${lastEndTime} min`;
     })
     .catch((error) => {
         console.error('Error:', error); 
         alert('An error occurred while sending data to the API: ' + error.message);
     });
 }
+
 
 // Initialize input listeners on document load
 document.addEventListener('DOMContentLoaded', setupInputListeners);

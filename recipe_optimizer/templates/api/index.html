@@ -3,14 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add and Edit Steps</title>
+    <title>Project Cooking</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=timer">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link type="image/png" sizes="96x96" rel="icon" href="{% static 'images/icons8-cooking-96.png' %}">
 </head>
 <body background="https://images.unsplash.com/photo-1638009665711-dfacc28c88c2?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D">
     <div class="main-container">
+        <h1 class="project-title">PROJECT: COOKING</h1>
         <!-- Form Section -->
         <div class="form-and-steps">
             <!-- Form Container -->
@@ -67,6 +69,7 @@
                 </table>
             </div>
         </div>
+        <div id="resultMessage" class="result-message"></div>
 
         <!-- API Steps Table (Under the other tables) -->
         <div class="table-container api-steps-table">

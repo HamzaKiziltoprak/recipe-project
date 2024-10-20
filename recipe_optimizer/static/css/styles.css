@@ -29,13 +29,13 @@ body {
 
 #resultMessage {
     font-size: clamp(1.2rem, 2vw, 1.5rem); /* Responsive font size */
-    color: #4caf50; /* Mesaj rengini yeşil yap */
+    color: #ec5353; /* Mesaj rengini yeşil yap */
     font-weight: bold; /* Kalın yazı */
     text-align: center; /* Ortala */
     margin: 10px 0px 0px 0px; /* Üst ve alt boşluk */
     padding: 15px; /* İç boşluk */
     background-color: #e8f5e9; /* Açık yeşil arka plan */
-    border: 1px solid #4caf50; /* Yeşil çerçeve */
+    border: 1px solid #ec5353; /* Yeşil çerçeve */
     border-radius: 10px; /* Yuvarlatılmış köşeler */
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Hafif gölge */
 }

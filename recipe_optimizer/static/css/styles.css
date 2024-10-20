@@ -8,6 +8,8 @@ body {
     justify-content: center;
     align-items: flex-start;
     height: 100vh;
+    background-repeat:no-repeat ;
+    background-size: auto;
 }
 
 .main-container {

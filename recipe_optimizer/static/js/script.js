@@ -36,7 +36,6 @@ function formatRequiresChef(requiresChef) {
 function updatePrerequisiteCheckboxes() {
   const prerequisiteCheckboxes = document.getElementById("prerequisiteCheckboxes");
   
-  // Tablo yapısı oluştur
   prerequisiteCheckboxes.innerHTML = `
     <label style="font-weight:bold; margin-bottom:10px;">Prerequisites</label>
     <table id="prerequisiteTable" style="width: 100%; border-collapse: collapse;">

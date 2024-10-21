@@ -135,7 +135,7 @@ _tasks = tasks = [
 ]
 
 # temporary for postman tests
-@csrf_exempt
+# @csrf_exempt
 def process_tasks(request):
     if request.method == "POST":
         try:

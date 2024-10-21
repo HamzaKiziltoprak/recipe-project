@@ -135,7 +135,7 @@ _tasks = tasks = [
 ]
 
 # temporary for postman tests
-# @csrf_exempt
+@csrf_exempt
 def process_tasks(request):
     if request.method == "POST":
         try:
@@ -147,6 +147,20 @@ def process_tasks(request):
             current_time = 0
 
             tasks = schedule_tasks(tasks)
+
+            unoc_unpre = [task for task in tasks if not task["occupies_chef"] and not task["prerequisites"]]
+            for task in unoc_unpre:
+                for t in tasks:
+                    if task["id"] in t["prerequisites"]:
+                                    task["start_time"] = t["start_time"] - task["time"]
+                                    task["end_time"] = t["start_time"]
+                                    break
+            for task in unoc_unpre:
+                for t in tasks:
+                    if t["id"] == task["id"]:
+                        t.update(task)
+                        break
+                    
             tasks.sort(key=lambda x: x["end_time"])
             for i in range(len(tasks)):
                 tasks[i]["order"] = i

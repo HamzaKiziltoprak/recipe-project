@@ -137,7 +137,7 @@ function submitAndShowResult() {
 
       alert("API response successfully received and added to the table!");
 
-      messageDiv.innerHTML = `Your optimal cooking time is <strong>${lastEndTime} min`;
+      messageDiv.innerHTML = `Your optimal cooking time is ${lastEndTime} min`;
     })
     .catch((error) => {
       console.error("Error:", error);

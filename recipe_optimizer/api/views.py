@@ -134,7 +134,7 @@ _tasks = tasks = [
     }
 ]
 
-# temporary for postman tests
+
 @csrf_exempt
 def process_tasks(request):
     if request.method == "POST":
@@ -144,8 +144,6 @@ def process_tasks(request):
 
             if not tasks: 
                 tasks = _tasks
-            current_time = 0
-
             tasks = schedule_tasks(tasks)
 
             unoc_unpre = [task for task in tasks if not task["occupies_chef"] and not task["prerequisites"]]
